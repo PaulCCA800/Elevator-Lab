@@ -103,7 +103,7 @@ int elevio_floorSensor(void){
     pthread_mutex_lock(&sockmtx);
     send(sockfd, (char[4]){7}, 4, 0);
     char buf[4];
-    recv(sockfd, buf, 4, 0);
+    recv(sockfd, buf, 4, 0); 
     pthread_mutex_unlock(&sockmtx);
     return buf[1] ? buf[2] : -1;
 }

@@ -29,8 +29,7 @@ void elevio_doorOpenLamp(int value); //assuming it lights door lamp based on inp
 void elevio_stopLamp(int value); //assuming it lights up stop lamp based on input
 
 //elevator outputs
-int elevio_callButton(int floor, ButtonType button); //what
+int elevio_callButton(int floor, ButtonType button); //checks if specific button is pressed
 int elevio_floorSensor(void); //returns value from floor sensor (-1 if no valid output)
 int elevio_stopButton(void); //assume returns if stop button is pressed
-int elevio_obstruction(void); //what
-
+int elevio_obstruction(void); //checks if obstruction is flipped
