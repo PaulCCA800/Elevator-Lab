@@ -21,14 +21,16 @@ typedef enum {
 
 void elevio_init(void);
 
-void elevio_motorDirection(MotorDirection dirn);
-void elevio_buttonLamp(int floor, ButtonType button, int value);
-void elevio_floorIndicator(int floor);
-void elevio_doorOpenLamp(int value);
-void elevio_stopLamp(int value);
+//elevator inputs
+void elevio_motorDirection(MotorDirection dirn); //assuming it drives the motor based on input (-1, 0, 1)
+void elevio_buttonLamp(int floor, ButtonType button, int value); //assuming it activates the specified button
+void elevio_floorIndicator(int floor); //assuming it lights up floor indicator based on input
+void elevio_doorOpenLamp(int value); //assuming it lights door lamp based on input
+void elevio_stopLamp(int value); //assuming it lights up stop lamp based on input
 
-int elevio_callButton(int floor, ButtonType button);
-int elevio_floorSensor(void);
-int elevio_stopButton(void);
-int elevio_obstruction(void);
+//elevator outputs
+int elevio_callButton(int floor, ButtonType button); //what
+int elevio_floorSensor(void); //returns value from floor sensor (-1 if no valid output)
+int elevio_stopButton(void); //assume returns if stop button is pressed
+int elevio_obstruction(void); //what
 
