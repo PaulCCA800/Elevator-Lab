@@ -1,7 +1,7 @@
 #include "panel.h"
 #include <stdbool.h>
 
-struct queue {
+struct Queue {
     int floor;
     bool internal;
     bool up;
