@@ -10,6 +10,7 @@ typedef struct Panel_s {
     bool up;
 } Panel;
 
-Panel panel = {.pressed = 0, .floor = -1, .internal = 0, .up = 0};
+extern Panel panel;
 
-void Button_pressed(Panel panel); //checks if a button is pressed and returns it's associated queue object if it is
+void Panel_lights(Queue_ele* q, int value);
+void Button_pressed(); //checks if a button is pressed

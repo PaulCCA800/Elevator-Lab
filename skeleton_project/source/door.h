@@ -3,12 +3,12 @@
 #include <time.h>
 
 typedef struct Door_s {
-    int timer;
+    time_t timer;
     bool door_status;
     bool obstruction;
 } Door;
 
-Door door = {.timer = 0, .door_status = 0, .obstruction = 0}
+extern Door door;
 
 int Get_timer();
 bool Get_door_status();

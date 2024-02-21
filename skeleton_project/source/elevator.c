@@ -1,20 +1,9 @@
 #include "elevator.h"
 
-//midlertidig, skal flyttes til main
-int main() {
-    if(elevator.initial) {
-        //initialization procedure
-    }
-    while (1) {
-        if (panel.pressed) {
-            //add to queue
-        }
-        Run();
-    }
-}
+Elevator elevator = {.current_floor = -1, .last_floor = -1, .initial = 1, .state = 'i', .stop_button = 0};
 
 //main function that runs for each loop in main, unsure if elevator.intial should be included here as well
-void Run() {
+void Run_elevator() {
     if (elevator.state == 'i') {
         // prolly do nothing?
     }
@@ -32,11 +21,12 @@ void Run() {
         elevator.state = 's';
         elevio_motorDirection(0);
     }
-
+    elevio_floorIndicator(elevator.last_floor);
 }
 
 //what happens when elevator is in the stopped state
 void Stop_state() {
+    time_t fire_t = 3;
     //if stop button, remain in stopped state
     if(elevator.stop_button) {
         //clear queue
@@ -44,10 +34,14 @@ void Stop_state() {
     }
     //checks door state and what to do with door
     else if(Get_door_status()) {
-        if(Get_timer() < 3) {
+        if(Get_obstruction()) {
+            Open_door();
             return;
         }
-        else if(!Get_obstruction()){
+        else if(Get_timer() < fire_t){
+            return;
+        }
+        else if(!Get_obstruction()) {
             Close_door();
             return;
         }
@@ -57,18 +51,23 @@ void Stop_state() {
     }
     //moves onto queue
     else {
+        printf("q");
+        fflush(stdout);
         //if top of queue is higher, sets state to up and starts moving up
-        if (Get_current().floor > current_floor) {
+        if (queue.size == 0) {
+            return;
+        }
+        else if (Get_current().floor > elevator.current_floor) {
             elevator.state = 'u';
             elevio_motorDirection(1);
         }
         //if top of queue is lower, sets state to down and starts moving down
-        else if(Get_current().floor < current_floor) {
+        else if(Get_current().floor < elevator.current_floor) {
             elevator.state = 'd';
             elevio_motorDirection(-1);
         }
         //if top of queue goes to current floor, reset state (not necessary, but a formality) and open the door
-        else if(Get_current().floor == current_floor) {
+        else if(Get_current().floor == elevator.current_floor) {
             elevator.state = 's';
             Open_door();
             //clear top of queue
@@ -105,7 +104,7 @@ void Up_state() {
     //else it's still travelling and nothing happens
 }
 
-//What happens when the elevator is in the down state
+//What happens when the elevator is in the down state, identical to what happens in the up state, only difference is the flag used for initilization and queue handling
 void Down_state() {
     //checks where elevator is and updates variables accordingly
     elevator.current_floor = elevio_floorSensor();

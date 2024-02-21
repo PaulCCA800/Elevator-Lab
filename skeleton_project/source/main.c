@@ -4,9 +4,40 @@
 #include <time.h>
 #include "driver/elevio.h"
 #include "panel.h"
+#include "elevator.h"
 
 
+int main() {
+    elevio_init();
+    if(elevator.initial) {
+        if (elevio_floorSensor() == -1) {
+            elevator.state = 'u';
+            elevio_motorDirection(1);
+            while (elevio_floorSensor() == -1) {
+            }
+            elevator.state = 's';
+            elevator.initial = 0;
+            elevio_motorDirection(0);
+        }
+        elevator.current_floor = elevio_floorSensor();
+        elevator.last_floor = elevator.current_floor;
+    }
+    while (1) {
+        Button_pressed(panel);
+        if (panel.pressed) {
+            if (elevator.state == 'u' || elevator.state == 'd') {
+                Add_queue_ele(Queue_ele_constructor(panel.floor,panel.internal,panel.up), elevator.last_floor);
+            }
+            else {
+                Add_queue_ele(Queue_ele_constructor(panel.floor,panel.internal,panel.up), elevator.current_floor);
+            }
+        }
+        Run_elevator();
+    }
+    return 0;
+}
 
+/*
 int main(){
     elevio_init();
     
@@ -50,3 +81,4 @@ int main(){
 
     return 0;
 }
+*/
