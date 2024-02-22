@@ -38,21 +38,18 @@ void Stop_state() {
             Open_door();
             return;
         }
-        else if(Get_timer() < fire_t){
-            return;
-        }
-        else if(!Get_obstruction()) {
-            Close_door();
+        else if(Get_timer() + fire_t > time(NULL)){
             return;
         }
         else {
+            printf("c");
+            fflush(stdout);
+            Close_door();
             return;
         }
     }
     //moves onto queue
     else {
-        printf("q");
-        fflush(stdout);
         //if top of queue is higher, sets state to up and starts moving up
         if (queue.size == 0) {
             return;
@@ -70,7 +67,7 @@ void Stop_state() {
         else if(Get_current().floor == elevator.current_floor) {
             elevator.state = 's';
             Open_door();
-            //clear top of queue
+            Delete_queue_ele(queue.head);
         }
         //nothing in queue? does nothing
         else {
@@ -91,7 +88,11 @@ void Up_state() {
     if(elevator.stop_button) {
         elevator.state = 's';
         elevio_motorDirection(0);
-        //clear queue
+        //Dette er smålig cursed, men tror det burde funke helt greit
+        //altså skal cleare hele queue
+        while (queue.head != NULL) {
+            Delete_queue_ele(queue.head);
+        }
         return;
     }
     //arrived at floor
@@ -99,7 +100,7 @@ void Up_state() {
         elevator.state = 's';
         elevio_motorDirection(0);
         Open_door();
-        //clear top of queue
+        Delete_queue_ele(queue.head);
     }
     //else it's still travelling and nothing happens
 }
@@ -116,7 +117,11 @@ void Down_state() {
     if(elevator.stop_button) {
         elevator.state = 's';
         elevio_motorDirection(0);
-        //clear queue
+        //Dette er smålig cursed, men tror det burde funke helt greit
+        //altså skal cleare hele queue
+        while (queue.head != NULL) {
+            Delete_queue_ele(queue.head);
+        }
         return;
     }
     //arrived at floor
@@ -124,7 +129,7 @@ void Down_state() {
         elevator.state = 's';
         elevio_motorDirection(0);
         Open_door();
-        //clear top of queue
+        Delete_queue_ele(queue.head);
     }
     //else it's still travelling and nothing happens
 }

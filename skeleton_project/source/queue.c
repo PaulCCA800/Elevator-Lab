@@ -16,14 +16,11 @@ struct Queue_ele_s* Queue_ele_constructor(int floor_, bool internal_, bool up_) 
 void Add_queue_ele(Queue_ele* q, int floor) {
     panel.pressed = 0;
     if(Should_be_added(q, floor)) {
-
         Panel_lights(q, 1);
         Queue_ele* current = queue.head;
         int previous_floor = floor;
         if (current == NULL) {
             Add_to_list(q, NULL, NULL);
-            printf("o");
-            fflush(stdout);
         }
         while(current != 0) {
             if (Compare_queue(current, q, previous_floor)) {
@@ -61,16 +58,25 @@ void Delete_queue_ele(Queue_ele* q) {
     //deletes all elements on the floor in question, I also have code for deleting only in the "correct" order
     while (current != NULL) {
         if (current->floor == floor) {
+            Panel_lights(current, 0);
+            //checks if it's the first element
             if (current->prev == NULL) {
+                //checks if it's *also* the last element
+                if (current->next == NULL) {
+                    Delete_from_list(current);
+                    return;
+                }
+                else {
                 current = current->next;
                 Delete_from_list(current->prev);
                 continue;
+                }
             }
+            //if it's not the first or last element :)
             else {
                 current = current->prev;
                 Delete_from_list(current->next);
             }
-            Panel_lights(q, 0);
             current = current->next;
         }   
     }
@@ -83,6 +89,10 @@ void Delete_from_list(Queue_ele* q) {
     if(q->next != NULL) {
         q->next->prev = q->prev;
     }
+    if (q->prev == NULL) {
+        queue.head = q->next;
+    }
+    
     free(q); 
     queue.size --;
 }
@@ -119,40 +129,43 @@ bool Compare_queue(Queue_ele* current, Queue_ele* new_queue, int floor) {
         return false;
     }
     //spesialtilfelet hvis den skal til samme etasje som første element, gitt at det eksisterer
-    if(queue.head != NULL) {
-        if (queue.head->floor == new_queue->floor) {
-            if (floor > queue.head->floor && (new_queue->internal || !new_queue->up)) {
-                return true;
-            }
-            else if (floor < queue.head->floor && (new_queue->internal || new_queue->up)) {
-                return true;
-            }
+    if (queue.head->floor == new_queue->floor) {
+        if (floor > queue.head->floor && (new_queue->internal || !new_queue->up)) {
+            return true;
+        }
+        else if (floor < queue.head->floor && (new_queue->internal || new_queue->up)) {
+            return true;
         }
     }
     else if(current->next == NULL) {
         return true;
     }
     //prioritere current over den nye
-    if((new_queue->internal && current->internal) || !new_queue->internal) {
-        if ((floor > current->floor && floor > new_queue->floor && new_queue->floor >= current->floor) && (!new_queue->up || new_queue->internal)) {
+    if((new_queue->internal && current->internal) || !(new_queue->internal)) {
+        //skal oppover og nye er mellom der vi er og dit vi skal
+        if (((floor > current->floor) && (floor > new_queue->floor) && (new_queue->floor >= current->floor)) && (!(new_queue->up) || new_queue->internal)) {
             return true;
         }
-        else if((floor < current->floor && floor < new_queue->floor && new_queue->floor <= current->floor) && (new_queue->up || new_queue->internal)) {
+        //skal nedover of nye er mellom der vi er og dit vi skal
+        else if(((floor < current->floor) && (floor < new_queue->floor) && (new_queue->floor <= current->floor)) && (new_queue->up || new_queue->internal)) {
             return true;
         }
+        //ellers er den bak denne
         else {
             return false;
         }
     }
     //prioriterer den nye over current
     else {
-        //skal oppover og current er mellom målet og der vi er
-        if((floor > new_queue->floor && floor > current->floor && current->floor >= new_queue->floor) && !current->up) {
+        //skal oppover og current er mellom den nye og der vi er
+        if(((floor > new_queue->floor) && (floor > current->floor) && (current->floor >= new_queue->floor)) && !(current->up)) {
             return false;
         }
-        else if((floor < new_queue->floor && floor < current->floor && current->floor <= new_queue->floor) && current->up) {
+        //skal neddover og current er mellom den nye og der vi er
+        else if(((floor < new_queue->floor) && (floor < current->floor) && (current->floor <= new_queue->floor)) && current->up) {
             return false;
         }
+        //ellers skal den nye forran
         else {
             return true;
         }
