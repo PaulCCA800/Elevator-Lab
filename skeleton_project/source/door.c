@@ -18,14 +18,10 @@ bool Get_obstruction() {
 void Close_door() {
     door.door_status = 0;
     elevio_doorOpenLamp(0);
-    //timer shit (unecessary? I reset the timer when the door opens)
 }
 
 void Open_door() {
     door.door_status = 1;
-    //light shit
     elevio_doorOpenLamp(1);
     door.timer = time(NULL);
-    printf("o");
-    fflush(stdout);
 }

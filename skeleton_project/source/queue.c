@@ -22,13 +22,18 @@ void Add_queue_ele(Queue_ele* q, int floor) {
         if (current == NULL) {
             Add_to_list(q, NULL, NULL);
         }
-        while(current != 0) {
+        while(current != NULL) {
             if (Compare_queue(current, q, previous_floor)) {
-                Add_to_list(q, current->prev, current);
-                printf("f");
+                printf("adding element prior \n");
                 fflush(stdout);
+                Add_to_list(q, current->prev, current);
             }
             previous_floor = current->floor;
+            //if last element (always add last)
+            if (current->next == NULL) {
+                Add_to_list(q, current, current->next);
+                return;
+            }
             current = current->next;
         }
     }
@@ -40,19 +45,19 @@ void Add_queue_ele(Queue_ele* q, int floor) {
 void Add_to_list(Queue_ele* q, Queue_ele* prev, Queue_ele* next) {
     q->next = next;
     q->prev = prev;
-    if (prev == 0) {
+    if (prev == NULL) {
         queue.head = q;
     }
     else {
         prev->next = q;
     }
-    if (next != 0) {
+    if (next != NULL) {
         next->prev = q;
     }
     queue.size ++;   
 }
 
-void Delete_queue_ele(Queue_ele* q) {
+void Delete_queue_ele(Queue_ele *q) {
     int floor = q->floor;
     Queue_ele* current = queue.head;
     //deletes all elements on the floor in question, I also have code for deleting only in the "correct" order
@@ -76,42 +81,35 @@ void Delete_queue_ele(Queue_ele* q) {
             else {
                 current = current->prev;
                 Delete_from_list(current->next);
-            }
-            current = current->next;
-        }   
+            } 
+        }
+        current = current->next;
     }
 }
 
 void Delete_from_list(Queue_ele* q) {
+    if (queue.head == q) {
+        printf("aaa \n");
+        fflush(stdout);
+        queue.head = q->next;
+    }
     if (q->prev != NULL) {
         q->prev->next = q->next;
     }
     if(q->next != NULL) {
         q->next->prev = q->prev;
     }
-    if (q->prev == NULL) {
-        queue.head = q->next;
-    }
-    
     free(q); 
     queue.size --;
 }
 
-Queue_ele Get_current() {
-    return *queue.head;
-}
-
 bool Should_be_added(Queue_ele* new_queue, int floor) {
-    if (queue.size >= 1) {
+    /*if (queue.size >= 1) {
+        //uh what do
         if (floor == new_queue->floor && (new_queue->internal || (new_queue->up && queue.head->floor > floor) || (!new_queue->up && queue.head->floor < floor))) {
             return false;
         }
-    }
-    else {
-        if(floor == new_queue->floor) {
-            return false;
-        }
-    }
+    }*/
     Queue_ele* current = queue.head;
     while(current != NULL) {
         if (current->floor == new_queue->floor && current->internal == new_queue->internal && (new_queue->internal || (current->up == new_queue->up))) {
@@ -136,9 +134,6 @@ bool Compare_queue(Queue_ele* current, Queue_ele* new_queue, int floor) {
         else if (floor < queue.head->floor && (new_queue->internal || new_queue->up)) {
             return true;
         }
-    }
-    else if(current->next == NULL) {
-        return true;
     }
     //prioritere current over den nye
     if((new_queue->internal && current->internal) || !(new_queue->internal)) {

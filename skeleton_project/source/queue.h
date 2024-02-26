@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "driver/elevio.h"
 
 typedef struct Queue_ele_s {
     int floor;
@@ -27,8 +28,6 @@ void Add_queue_ele(Queue_ele* q, int floor);
 void Add_to_list(Queue_ele* q, Queue_ele* prev, Queue_ele* next);
 void Delete_queue_ele(Queue_ele* q);
 void Delete_from_list(Queue_ele* q);
-
-Queue_ele Get_current();
 
 bool Should_be_added(Queue_ele* new_queue, int floor);
 bool Compare_queue(Queue_ele* current, Queue_ele* new_queue, int floor);
