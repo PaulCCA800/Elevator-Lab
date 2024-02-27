@@ -5,6 +5,7 @@ Panel panel = {.pressed = 0, .floor = -1, .internal = 0, .up = 0};
 //maybe it should have a check if the button is active? Too many for loops?
 //(I mean that would be the function I made to check if something should be added to the queue so idk)
 void Button_pressed() {
+    panel.pressed = 0;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 3; j++) {
             if(elevio_callButton(i,j)) {

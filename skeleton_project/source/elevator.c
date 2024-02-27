@@ -10,6 +10,8 @@ void Run_elevator() {
     door.obstruction = elevio_obstruction();
     //checks where elevator is and updates variables accordingly
     elevator.current_floor = elevio_floorSensor();
+
+    //state machine essentially
     if (elevator.state == 'i') {
         Initial_state();
     }

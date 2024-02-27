@@ -8,11 +8,16 @@
 
 int main() {
     elevio_init();
+    // to stop counting too often (as time(NULL) only counts whole seconds)
+    int counter = 10;
     while (1) {
         Button_pressed(panel);
-        if (panel.pressed) {
+        if (panel.pressed && (counter >= 10)) {
+            counter = 0;
             Add_queue_ele(Queue_ele_constructor(panel.floor,panel.internal,panel.up), elevator.last_floor);
+            printQueue();
         }
+        counter ++;
         Run_elevator();
     }
     return 0;

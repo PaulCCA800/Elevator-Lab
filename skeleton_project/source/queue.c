@@ -14,7 +14,6 @@ struct Queue_ele_s* Queue_ele_constructor(int floor_, bool internal_, bool up_) 
 }
 
 void Add_queue_ele(Queue_ele* q, int floor) {
-    panel.pressed = 0;
     if(Should_be_added(q, floor)) {
         Panel_lights(q, 1);
         Queue_ele* current = queue.head;
@@ -28,12 +27,14 @@ void Add_queue_ele(Queue_ele* q, int floor) {
                 fflush(stdout);
                 Add_to_list(q, current->prev, current);
             }
-            previous_floor = current->floor;
             //if last element (always add last)
-            if (current->next == NULL) {
+            else if (current->next == NULL) {
+                printf("\n shouldn't be here \n");
+                fflush(stdout);
                 Add_to_list(q, current, current->next);
                 return;
             }
+            previous_floor = current->floor;
             current = current->next;
         }
     }
@@ -43,6 +44,11 @@ void Add_queue_ele(Queue_ele* q, int floor) {
 }
 
 void Add_to_list(Queue_ele* q, Queue_ele* prev, Queue_ele* next) {
+    if (next == NULL) {
+        printf("\n huh?\n");
+        fflush(stdout);
+    }
+    
     q->next = next;
     q->prev = prev;
     if (prev == NULL) {
@@ -164,5 +170,18 @@ bool Compare_queue(Queue_ele* current, Queue_ele* new_queue, int floor) {
         else {
             return true;
         }
+    }
+}
+
+void printQueue() {
+    Queue_ele* current = queue.head;
+    while (current != NULL) {
+        printf("\n%d", current->floor);
+        fflush(stdout);
+        if (current->next == NULL) {
+            printf("\nshit\n");
+            fflush(stdout);
+        }
+        current = current->next;
     }
 }

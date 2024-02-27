@@ -31,3 +31,5 @@ void Delete_from_list(Queue_ele* q);
 
 bool Should_be_added(Queue_ele* new_queue, int floor);
 bool Compare_queue(Queue_ele* current, Queue_ele* new_queue, int floor);
+
+void printQueue();
