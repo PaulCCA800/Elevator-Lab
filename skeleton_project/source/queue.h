@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "driver/elevio.h"
+#include "elevator.h"
 
 typedef struct Queue_ele_s {
     int floor;

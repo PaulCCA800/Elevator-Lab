@@ -26,6 +26,7 @@ void Add_queue_ele(Queue_ele* q, int floor) {
                 printf("adding element prior \n");
                 fflush(stdout);
                 Add_to_list(q, current->prev, current);
+                return;
             }
             //if last element (always add last)
             else if (current->next == NULL) {
@@ -128,6 +129,13 @@ bool Should_be_added(Queue_ele* new_queue, int floor) {
 
 //denne er litt fuck ._.
 bool Compare_queue(Queue_ele* current, Queue_ele* new_queue, int floor) {
+    if ((elevator.state == 's') && (new_queue->floor == elevator.last_floor)) {
+        return true;
+    }
+    
+    if((elevator.state == 'u' || elevator.state == 'd') && new_queue->floor == elevator.last_floor) {
+        return false;
+    }
     //prioriterer eldste hvis de skal til samme sted, ikke egentlig så farlig, men gir mulighet for forbedring utenfor specs
     if (current->floor == new_queue->floor) {
         return false;

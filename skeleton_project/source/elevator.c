@@ -67,6 +67,12 @@ void Stop_state() {
     //checks door state and what to do with door
     else if(Get_door_status()) {
         if(Get_obstruction()) {
+            if (queue.head == NULL) {
+            }
+            else if((queue.head->floor == elevator.last_floor) && elevator.current_floor != -1) {
+                Delete_queue_ele(queue.head);
+                elevator.state = 's';
+            }
             Open_door();
             return;
         }
@@ -118,6 +124,13 @@ void Up_state() {
     if(elevator.current_floor != -1) {
         elevator.last_floor = elevator.current_floor;
         elevio_floorIndicator(elevator.last_floor);
+        //arrived at floor
+        if(queue.head->floor == elevator.current_floor) {
+            elevator.state = 's';
+            elevio_motorDirection(0);
+            Open_door();
+            Delete_queue_ele(queue.head);
+        }
     }
     //stop button stops elevator
     if(elevator.stop_button) {
@@ -130,13 +143,6 @@ void Up_state() {
             Delete_queue_ele(queue.head);
         }
         return;
-    }
-    //arrived at floor
-    if(queue.head->floor == elevator.last_floor) {
-        elevator.state = 's';
-        elevio_motorDirection(0);
-        Open_door();
-        Delete_queue_ele(queue.head);
     }
     //else it's still travelling and nothing happens
 }
@@ -160,7 +166,7 @@ void Down_state() {
         return;
     }
     //arrived at floor
-    if(queue.head->floor == elevator.last_floor) {
+    if(queue.head->floor == elevator.current_floor) {
         elevator.state = 's';
         elevio_motorDirection(0);
         Open_door();
