@@ -56,6 +56,7 @@ void Stop_state() {
     time_t fire_t = 3;
     //if stop button, remain in stopped state
     if(elevator.stop_button) {
+        elevio_stopLamp(1);
         while (queue.head != NULL) {
             Delete_queue_ele(queue.head);
         }
@@ -64,8 +65,11 @@ void Stop_state() {
         }
         return;
     }
+    else {
+        elevio_stopLamp(0);
+    }
     //checks door state and what to do with door
-    else if(Get_door_status()) {
+    if(Get_door_status()) {
         if(Get_obstruction()) {
             if (queue.head == NULL) {
             }

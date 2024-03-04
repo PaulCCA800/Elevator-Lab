@@ -23,15 +23,11 @@ void Add_queue_ele(Queue_ele* q, int floor) {
         }
         while(current != NULL) {
             if (Compare_queue(current, q, previous_floor)) {
-                printf("adding element prior \n");
-                fflush(stdout);
                 Add_to_list(q, current->prev, current);
                 return;
             }
             //if last element (always add last)
             else if (current->next == NULL) {
-                printf("\n shouldn't be here \n");
-                fflush(stdout);
                 Add_to_list(q, current, current->next);
                 return;
             }
@@ -44,12 +40,7 @@ void Add_queue_ele(Queue_ele* q, int floor) {
     }
 }
 
-void Add_to_list(Queue_ele* q, Queue_ele* prev, Queue_ele* next) {
-    if (next == NULL) {
-        printf("\n huh?\n");
-        fflush(stdout);
-    }
-    
+void Add_to_list(Queue_ele* q, Queue_ele* prev, Queue_ele* next) { 
     q->next = next;
     q->prev = prev;
     if (prev == NULL) {
@@ -96,8 +87,6 @@ void Delete_queue_ele(Queue_ele *q) {
 
 void Delete_from_list(Queue_ele* q) {
     if (queue.head == q) {
-        printf("aaa \n");
-        fflush(stdout);
         queue.head = q->next;
     }
     if (q->prev != NULL) {
@@ -187,7 +176,7 @@ void printQueue() {
         printf("\n%d", current->floor);
         fflush(stdout);
         if (current->next == NULL) {
-            printf("\nshit\n");
+            printf("\nend\n");
             fflush(stdout);
         }
         current = current->next;
