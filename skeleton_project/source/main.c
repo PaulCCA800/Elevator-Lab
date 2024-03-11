@@ -6,18 +6,20 @@
 #include "panel.h"
 #include "elevator.h"
 
-int main() {
+int main()
+{
     elevio_init();
     // to stop counting too often (as time(NULL) only counts whole seconds)
-    int counter = 10;
-    while (1) {
+    while (1)
+    {
         Button_pressed(panel);
-        if (panel.pressed && (counter >= 10)) {
-            counter = 0;
-            Add_queue_ele(Queue_ele_constructor(panel.floor,panel.internal,panel.up), elevator.last_floor);
+        if (panel.pressed)
+        {
+
+            Add_queue_ele(Queue_ele_constructor(panel.floor, panel.internal, panel.up), elevator.last_floor);
             printQueue();
         }
-        counter ++;
+
         Run_elevator();
     }
     return 0;
@@ -26,7 +28,7 @@ int main() {
 /*
 int main(){
     elevio_init();
-    
+
     printf("=== Example Program ===\n");
     printf("Press the stop button on the elevator panel to exit\n");
 
@@ -56,12 +58,12 @@ int main(){
         } else {
             elevio_stopLamp(0);
         }
-        
+
         if(elevio_stopButton()){
             elevio_motorDirection(DIRN_STOP);
             break;
         }
-        
+
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
     }
 
